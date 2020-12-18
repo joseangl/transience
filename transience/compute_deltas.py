@@ -5,7 +5,7 @@ import numpy as np
 import sys
 import os.path
 from glob import iglob
-from librosa.feature import delta
+from python_speech_features import delta
 
 _DEFAULT_DELTA_WIN = 3
 _DEFAULT_ACC_WIN = 2
@@ -42,7 +42,7 @@ if __name__ == '__main__':
         fname = os.path.basename(filepath)
         print("Processing file {}...".format(fname))
         mfcc = np.load(filepath)
-        delta = delta(mfcc, width=2 * opt.delta_win + 1, axis=0)
-        acc = delta(delta, width=2 * opt.acc_win + 1, axis=0)
+        delta = delta(mfcc, opt.delta_win)
+        acc = delta(delta, opt.acc_win)
         mfcc_a_d = np.hstack([mfcc, delta, acc])
         np.save(os.path.join(out_dir, fname))
