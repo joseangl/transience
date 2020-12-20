@@ -9,7 +9,7 @@ import preprocess
 from glob import glob, iglob
 import numpy as np
 from os.path import basename, join
-from dctw import DCTW
+from transience import MultiviewAligner
 import joblib
 
 
@@ -37,7 +37,7 @@ _SIMILARITY_FUNCS = ['cca', 'mmi']
 def print_usage():
     print("Usage: {} OPTIONS <out_network_file> <view1_dir> <view2_dir>\n".format(sys.argv[0]))
     print("Where:")
-    print("\tout_network_file: file where the DCCA network is saved.")
+    print("\tout_network_file: file where the alignment network is saved.")
     print("\tview1_dir: directory with the Numpy files containing the features for view1 (e.g. sensor features).")
     print("\tview2_dir: directory with the Numpy files containing the features for view2 (e.g. speech features).\n")
     print("OPTIONS are:")
@@ -45,8 +45,8 @@ def print_usage():
     print("\t--activation: activation function used for the hidden layers [Types available: {}][Default={}]".format(','.join(_ACTIVATION_TYPES), _DEFAULT_ACTIVATION))
     print("\t--learning_rate: learning rate for the Adam algorithm [Default= {:.2e}]".format(_DEFAULT_LR))
     print("\t--batch_size: size of the minibatches for training [Default= {}]".format(_DEFAULT_BATCH_SIZE))
-    print("\t--max_iters: maximum number of training iterations (1 iteration= DCCA training + DTW alignment) [Default= {}]".format(_DEFAULT_MAX_ITERS))
-    print("\t--epochs_per_iter: number of epochs the DCCA network is trained in each iteration [Default= {}]".format(_DEFAULT_EPOCHS_PER_ITER))
+    print("\t--max_iters: maximum number of training iterations (1 iteration= DNN training + DTW alignment) [Default= {}]".format(_DEFAULT_MAX_ITERS))
+    print("\t--epochs_per_iter: number of epochs the DNN is trained in each iteration [Default= {}]".format(_DEFAULT_EPOCHS_PER_ITER))
     print("\t--dropout: dropout probability (0.0 means no dropout is applied) [Default= {:.2f}]".format(_DEFAULT_DROPOUT))
     print("\t--network_arch: number of hidden layers and units per layer [Default= \'{}\']".format(_DEFAULT_NETWORK_ARCH))
     print("\t--latent_shared_dim: the dimensionality of the shared latent space [Default= {}]".format(_DEFAULT_LATENT_SHARED_DIM))
@@ -176,7 +176,7 @@ if __name__ == '__main__':
         hidden_layers = opt.network_arch.split('#')
 
     # Create and train the model
-    model = DCTW(True)
+    model = MultiviewAligner(True)
     view1_feature_dim = view1_train_data[0].shape[1]
     view2_feature_dim = view2_train_data[0].shape[1]
     model.build(view1_feature_dim, view2_feature_dim, opt.latent_shared_dim, opt.latent_private_dim, network_architecture=hidden_layers, activation=opt.activation,

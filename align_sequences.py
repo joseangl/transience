@@ -8,7 +8,7 @@ import os
 import os.path
 import joblib
 import preprocess
-from dctw import DCTW
+from transience import DCTW
 import librosa.display
 import matplotlib.pyplot as plt
 

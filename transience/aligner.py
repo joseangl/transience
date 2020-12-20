@@ -9,7 +9,6 @@ import tensorflow as tf
 from tensorflow_probability import distributions as tfd
 from tensorflow import keras
 import numpy as np
-import preprocess 
 from librosa.sequence import dtw
 import matplotlib.pyplot as plt
 import librosa.display
@@ -324,7 +323,6 @@ class MMILossLayer(keras.layers.Layer):
 class ContrastiveLossLayer(keras.layers.Layer):
     def __init__(self, margin=0.5, **kwargs):
         super(ContrastiveLossLayer, self).__init__(**kwargs)
-        # Trainable bandwiths for the Gaussian kernerls used in KDE
         self._margin = tf.constant(margin, dtype=tf.float32)
 
     def get_config(self):
@@ -336,7 +334,7 @@ class ContrastiveLossLayer(keras.layers.Layer):
         return (latent1, latent2)
 
 
-class DCTW(object):
+class MultiviewAligner(object):
     def __init__(self, verbose=True):
         self._verbose = verbose
         self._model = None
