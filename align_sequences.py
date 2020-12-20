@@ -7,8 +7,8 @@ import numpy as np
 import os
 import os.path
 import joblib
-import preprocess
-from transience import DCTW
+import transience.preprocess as preprocess
+from transience.aligner import MultiviewAligner
 import librosa.display
 import matplotlib.pyplot as plt
 
@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 def print_usage():
     print("Usage: {} OPTIONS <network_file> <view1_in_dir> <view2_in_dir> <view1_out_dir> <view2_out_dir>\n".format(sys.argv[0]))
     print("Where:")
-    print("\tout_network_file: file where the DCCA network is stored.")
+    print("\tout_network_file: file where the alignment network is stored.")
     print("\tview1_in_dir: directory with the Numpy files containing the unaligned sequences for view1 (e.g. speech features).")
     print("\tview2_in_dir: directory with the Numpy files containing the unaligned sequences for view1 (e.g. sensor features).")
     print("\tview1_out_dir: directory where the aligned view1 sequences are saved.")
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     (opt, network_file, view1_in_dir, view2_in_dir, view1_out_dir, view2_out_dir) = parse_args()
 
     # Load the aligner network
-    aligner = DCTW()
+    aligner = MultiviewAligner()
     aligner.build_from_file(network_file)
 
     # Load the pipelines for both views

@@ -4,12 +4,12 @@ import sys
 import optparse
 # import tempfile
 # import shutil
-import utils
-import preprocess
 from glob import glob, iglob
 import numpy as np
 from os.path import basename, join
-from transience import MultiviewAligner
+from transience.aligner import MultiviewAligner
+import transience.utils as utils
+import transience.preprocess as preprocess
 import joblib
 
 
@@ -28,7 +28,9 @@ _DEFAULT_SIMILARITIY = 'cca'
 _DEFAULT_WIN = 1
 _DEFAULT_AUTOENCODER_LOSS_WEIGHT = 0.0
 _DEFAULT_NOISE_STD = 0.0
-
+_DEFAULT_MFCC_ORDER = 25
+_DEFAULT_DELTA_WIN = 3
+_DEFAULT_ACC_WIN = 2
 
 _ACTIVATION_TYPES = ['linear', 'sigmoid', 'tanh', 'relu', 'elu', 'lrelu']
 _SIMILARITY_FUNCS = ['cca', 'mmi']
@@ -156,11 +158,11 @@ if __name__ == '__main__':
 
     # Read the data and extract the features
     view1_raw_data = utils.load_numpy_dataset(view1_dir, train_files)
-    view1_pipeline = preprocess.create_preprocessing_pipeline(opt.view1_win, opt.view1_pca_ncomps)
+    view1_pipeline = preprocess.create_preprocessing_pipeline_sensor(opt.view1_win, opt.view1_pca_ncomps)
     view1_train_data = preprocess.preprocess_data(view1_pipeline, view1_raw_data)
 
     view2_raw_data = utils.load_numpy_dataset(view2_dir, train_files)
-    view2_pipeline = preprocess.create_preprocessing_pipeline(opt.view2_win, opt.view2_pca_ncomps)
+    view2_pipeline = preprocess.create_preprocessing_pipeline_mfcc(_DEFAULT_MFCC_ORDER, _DEFAULT_DELTA_WIN, _DEFAULT_ACC_WIN)
     view2_train_data = preprocess.preprocess_data(view2_pipeline, view2_raw_data)
 
     view1_validation_data = view2_validation_data = None

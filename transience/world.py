@@ -65,3 +65,4 @@ if __name__ == '__main__':
         np.save(os.path.join(feat_dir, filename + ".bap.npy"), bap)
         np.save(os.path.join(feat_dir, filename + ".vuv.npy"), vuv)
         np.save(os.path.join(feat_dir, filename + ".f0.npy"), continuous_f0)
+        np.save(os.path.join(feat_dir, filename + ".npy"), np.hstack([mfcc, bap, np.log(continuous_f0), vuv]))
