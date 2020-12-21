@@ -2,6 +2,17 @@
 This code is part of the paper: _Multi-view Temporal Alignment for Non-parallel Articulatory-to-Acoustic Speech Synthesis_ submitted to IberSPEECH 2020.
 
 
+Install 
+----------
+
+This framework can be installed locally by running:
+
+```
+python setup.py install
+```
+
+This will allow you to import PASE modules from anywhere.
+
 
 License and Citation
 ----------

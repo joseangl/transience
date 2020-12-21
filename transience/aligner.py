@@ -4,6 +4,7 @@ import time
 import datetime
 import os
 import json
+import tempfile
 import tensorflow as tf
 # import tensorflow.compat.v1 as tf
 from tensorflow_probability import distributions as tfd
@@ -449,7 +450,8 @@ class MultiviewAligner(object):
         self._dtw_distance = dtw_metric
 
         if view1_val_dataset and view2_val_dataset:
-            checkpoint_file = 'dcca_weights.h5'
+            checkpoint_file = tempfile.NamedTemporaryFile(delete=False)
+            checkpoint_file.close()
 
         if self._verbose:
             print('Starting training...')
@@ -495,7 +497,7 @@ class MultiviewAligner(object):
                     best_val_error = val_dtw_cost
                     last_best_iter = i
                     # Save the weights
-                    self._model.save_weights(checkpoint_file)
+                    self._model.save_weights(checkpoint_file.name)
                     if self._verbose:
                         print('   (%.1f sec)' % duration)
                 else:
@@ -511,8 +513,8 @@ class MultiviewAligner(object):
 
         # If a validation set was used, restore the best weights
         if view1_val_dataset and view2_val_dataset:
-            self._model.load_weights(checkpoint_file)
-            os.remove(checkpoint_file)
+            self._model.load_weights(checkpoint_file.name)
+            os.remove(checkpoint_file.name)
 
     def align(self, x, y):
         # Predict the latent factors both sequences
