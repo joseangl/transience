@@ -13,6 +13,7 @@ import numpy as np
 from librosa.sequence import dtw
 import matplotlib.pyplot as plt
 import librosa.display
+from . import preprocess
 
 # Constants
 _EARLY_STOPPING_PATIENCE = 15

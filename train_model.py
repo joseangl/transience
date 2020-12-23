@@ -175,7 +175,7 @@ if __name__ == '__main__':
     if opt.network_arch == '':
         hidden_layers = []
     else:
-        hidden_layers = opt.network_arch.split('#')
+        hidden_layers = list(map(int, opt.network_arch.split('#')))
 
     # Create and train the model
     model = MultiviewAligner(True)
