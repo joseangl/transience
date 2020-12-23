@@ -11,7 +11,7 @@ from nnmnkwii.preprocessing.f0 import interp1d
 from librosa import resample
 
 
-_DEFAULT_FRAME_PERIOD = 10
+_DEFAULT_FRAME_PERIOD = 5
 _DEFAULT_MFCC_ORDER = 25
 _TARGET_FS = 16000
 
@@ -53,16 +53,16 @@ if __name__ == '__main__':
         f0, sp, ap = pw.wav2world(x, fs, frame_period=opt.frame_period)
         mfcc = pw.code_spectral_envelope(sp, fs, opt.num_mfcc)
         bap = pw.code_aperiodicity(ap, fs)
-        vuv = (f0>0).astype(np.float32)
+        vuv = (f0 > 0).astype(np.float32)
         # Interpolate the F0 for the unvoiced segments
-        continuous_f0 = interp1d(f0, kind='slinear')
+        continuous_f0 = np.log(interp1d(f0, kind='slinear'))
 
         # Save the features
         filename = os.path.splitext(os.path.basename(filepath))[0]
-        np.save(os.path.join(feat_dir, filename + ".sp.npy"), sp)
-        np.save(os.path.join(feat_dir, filename + ".ap.npy"), ap)
-        np.save(os.path.join(feat_dir, filename + ".mfcc.npy"), mfcc)
-        np.save(os.path.join(feat_dir, filename + ".bap.npy"), bap)
-        np.save(os.path.join(feat_dir, filename + ".vuv.npy"), vuv)
-        np.save(os.path.join(feat_dir, filename + ".f0.npy"), continuous_f0)
-        np.save(os.path.join(feat_dir, filename + ".npy"), np.hstack([mfcc, bap, np.log(continuous_f0), vuv]))
+        # np.save(os.path.join(feat_dir, filename + ".sp.npy"), sp)
+        # np.save(os.path.join(feat_dir, filename + ".ap.npy"), ap)
+        # np.save(os.path.join(feat_dir, filename + ".mfcc.npy"), mfcc)
+        # np.save(os.path.join(feat_dir, filename + ".bap.npy"), bap)
+        # np.save(os.path.join(feat_dir, filename + ".vuv.npy"), vuv)
+        # np.save(os.path.join(feat_dir, filename + ".f0.npy"), continuous_f0)
+        np.save(os.path.join(feat_dir, filename + ".npy"), np.hstack([mfcc, bap, continuous_f0[:, np.newaxis], vuv[:, np.newaxis]]))
