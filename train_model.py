@@ -177,8 +177,11 @@ if __name__ == '__main__':
     else:
         hidden_layers = list(map(int, opt.network_arch.split('#')))
 
+    # Save the parameters of the preprocessing pipeline
+    joblib.dump((view1_pipeline, view2_pipeline), '{}.joblib'.format(network_file))
+
     # Create and train the model
-    model = MultiviewAligner(True)
+    model = MultiviewAligner(True, chk_file=network_file)
     view1_feature_dim = view1_train_data[0].shape[1]
     view2_feature_dim = view2_train_data[0].shape[1]
     model.build(view1_feature_dim, view2_feature_dim, opt.latent_shared_dim, opt.latent_private_dim, network_architecture=hidden_layers, activation=opt.activation,
@@ -188,9 +191,6 @@ if __name__ == '__main__':
 
     # Save the model
     model.save(network_file)
-
-    # Save the parameters of the preprocessing pipeline
-    joblib.dump((view1_pipeline, view2_pipeline), '{}.joblib'.format(network_file))
 
     # if remove_dirs:
     #     shutil.rmtree(train_dir_1)

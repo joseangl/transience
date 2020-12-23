@@ -337,11 +337,12 @@ class ContrastiveLossLayer(keras.layers.Layer):
 
 
 class MultiviewAligner(object):
-    def __init__(self, verbose=True):
+    def __init__(self, verbose=True, chk_file=None):
         self._verbose = verbose
         self._model = None
         self._dtw_distance = None
         self._model_ready = False
+        self._chk_file = chk_file
         np.random.seed(1234)
         tf.random.set_seed(1234)
 
@@ -427,8 +428,8 @@ class MultiviewAligner(object):
     def save(self, filename):
         if not self._model_ready:
             raise AssertionError('The model has not yet been initialised by calling to build() or build_from_file().')
-        if self._verbose:
-            print('Saving the model in {}'.format(filename))
+        # if self._verbose:
+        #     print('Saving the model in {}'.format(filename))
         # Create a dictionary with the model meta-info and save it as a JSON file
         model_info = {'DTW_distance': self._dtw_distance,
                       'Model_filename': '{}.h5'.format(filename)}
@@ -499,6 +500,8 @@ class MultiviewAligner(object):
                     last_best_iter = i
                     # Save the weights
                     self._model.save_weights(checkpoint_file.name)
+                    if self._chk_file:
+                        self.save(self, self._chk_file)
                     if self._verbose:
                         print('   (%.1f sec)' % duration)
                 else:
