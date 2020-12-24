@@ -501,7 +501,7 @@ class MultiviewAligner(object):
                     # Save the weights
                     self._model.save_weights(checkpoint_file.name)
                     if self._chk_file:
-                        self.save(self, self._chk_file)
+                        self.save(self._chk_file)
                     if self._verbose:
                         print('   (%.1f sec)' % duration)
                 else:
