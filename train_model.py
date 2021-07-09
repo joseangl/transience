@@ -88,29 +88,6 @@ def parse_args():
     return opt, args[0], args[1], args[2]
 
 
-# def split_parallel_dataset(dir1, dir2, val_split):
-#     files = np.array([basename(f) for f in glob(join(dir1, '*.npy'))])
-#     num_files = len(files)
-#     index = np.arange(num_files)
-#     np.random.shuffle(index)
-#     cut = round(num_files * val_split)
-
-#     # Copy the validation files
-#     val_dir_1 = tempfile.mkdtemp()
-#     val_dir_2 = tempfile.mkdtemp()
-#     for f in files[index[:cut]]:
-#         shutil.copy(join(dir1, f), val_dir_1)
-#         shutil.copy(join(dir2, f), val_dir_2)
-
-#     # Copy the training files
-#     train_dir_1 = tempfile.mkdtemp()
-#     train_dir_2 = tempfile.mkdtemp()
-#     for f in files[index[cut:]]:
-#         shutil.copy(join(dir1, f), train_dir_1)
-#         shutil.copy(join(dir2, f), train_dir_2)
-#     return train_dir_1, train_dir_2, val_dir_1, val_dir_2
-
-
 def split_parallel_dataset(dir1, dir2, val_split):
     files = np.array([basename(f) for f in iglob(join(dir1, '*.npy'))])
     if val_split > 0.0:
